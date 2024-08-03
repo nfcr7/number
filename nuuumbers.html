@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>numbergame</title>
+    <link rel="shortcut icon" type="image/x-icon" href="eg.ico.ico"/>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: grey;
+            font-family: 'Press Start 2P', sans-serif;
+        }
+        .barra {
+            display: flex;
+            width: 100%;
+            height: 6rem;
+            background-color: #3a5a40;
+            color: white;
+            font-family: monospace;
+            text-align: center;
+            font-size: 34px;
+            justify-content: center;
+        }
+        .game {
+            background-color: black;
+            color: white;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            font-family: monospace;
+            margin-bottom: 20px;
+        }
+        .centered-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: calc(100vh - 150px); /* Adjust as needed to fit the rest of your layout */
+        }
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .input-group input {
+            background-color: burlywood;
+            color: black;
+            width: 30rem;
+            height: 3rem;
+            font-size: 40px;
+            text-align: center;
+            box-shadow: 10px 5px 20px grey;
+            border-radius: 10px;
+            margin: 0 5px;
+            word-spacing: 10px;
+        }
+        .input-group .hint {
+            background-color: white;
+            color: black;
+            width: 3rem;
+            height: 3rem;
+            font-size: 40px;
+            text-align: center;
+            box-shadow: 10px 5px 20px grey;
+            border-radius: 10px;
+            margin: 0 5px;
+           }
+        #roz {
+            background-color: black;
+            color: whitesmoke;
+            width: 15rem;
+            height: 3rem;
+            font-size: 40px;
+            font-family: monospace;
+            box-shadow: 10px 5px 20px grey;
+            border-radius: 10px;
+           
+            margin: 5px;
+        }
+        #submit{
+            width: 15rem;
+            height: 30px;
+             box-shadow: 10px 5px 20px grey;
+            border-radius: 10px;
+             margin: 10px;
+             background-color: black;
+               color: white;
+        }
+        .toggle-container {
+            margin-left: 10px;
+            position: absolute;
+            top: 7%;
+            left: 45%;
+        }
+        .toggle--checkbox {
+            display: none;
+        }
+        .toggle--btn {
+            display: block;
+            margin: 0 auto;
+            font-size: 1em;
+            transition: all 350ms ease-in;
+            position: relative;
+            height: 30px;
+            width: 60px;
+            border-radius: 15px;
+            background-color: #3c4145;
+            border: 3px solid #1c1c1c;
+        }
+        .toggle--btn::before {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 3px solid #e3e3c7;
+            transition: all 250ms ease-in;
+        }
+        .toggle--checkbox:checked + .toggle--btn {
+            background-color: #9ee3fb;
+            border: 3px solid #86c3d7;
+        }
+        .toggle--checkbox:checked + .toggle--btn::before {
+            left: 30px;
+            background-color: #ffdf6d;
+            border: 3px solid #e1c348;
+        }
+        .dark-mode #noroz1,
+        .dark-mode #noroz2,
+        .dark-mode #noroz3,
+        .dark-mode #noroz4,
+        .dark-mode #noroz5,
+        .dark-mode #roz {
+            background-color: white;
+            color: black;
+        }
+        .dark-mode .game {
+            background-color: white;
+            color: black;
+            font-family: monospace;
+        }
+        
+        /* New styles for the message overlay */
+        .message-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 48px;
+            text-align: center;
+            font-family: monospace;
+        }
+
+        .message-content {
+            background-color: #3a5a40;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="barra">THE NUMBER GAME</div>
+    <div class="toggle-container">
+        <input type="checkbox" id="toggle--daynight" class="toggle--checkbox">
+        <label class="toggle--btn" for="toggle--daynight"><span class="toggle--feature"></span></label>
+    </div>
+    <div class="game">guess the number we picked and win a million dollar</div>
+   
+    <div class="centered-container">
+        <div class="input-container">
+            <div class="input-group">
+                <input type="text" id="noroz1" placeholder="first try" disabled>
+                <input type="text" id="hint1c" class="hint" disabled placeholder="c">
+                <input type="text" id="hint1p" class="hint" disabled placeholder="p">
+            </div>
+            <div class="input-group">
+                <input type="text" id="noroz2" placeholder="second try" disabled>
+                <input type="text" id="hint2c" class="hint" disabled placeholder="c">
+                <input type="text" id="hint2p" class="hint" disabled placeholder="p">
+            </div>
+            <div class="input-group">
+                <input type="text" id="noroz3" placeholder="third try" disabled placeholder="p">
+                <input type="text" id="hint3c" class="hint" disabled placeholder="c">
+                <input type="text" id="hint3p" class="hint" disabled placeholder="p">
+            </div>
+            <div class="input-group">
+                <input type="text" id="noroz4" placeholder="fourth try" disabled>
+                <input type="text" id="hint4c" class="hint" disabled placeholder="c">
+                <input type="text" id="hint4p" class="hint" disabled placeholder="p">
+            </div>
+            <div class="input-group">
+                <input type="text" id="noroz5" placeholder="fifth try" disabled>
+                <input type="text" id="hint5c" class="hint" disabled placeholder="c">
+                <input type="text" id="hint5p" class="hint" disabled placeholder="p">
+            </div>
+        </div>
+        <input type="text" id="roz" placeholder="start">
+        <button id="submit">submit</button>
+    </div>
+
+    <!-- Add this new div for the message overlay -->
+    <div id="messageOverlay" class="message-overlay">
+        <div class="message-content">
+            <p id="messageText"></p>
+        </div>
+    </div>
+
+    <script>
+        // The number to guess
+        const numberToGuess = "6825";
+
+        // Keep track of the current attempt
+        let currentAttempt = 1;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const submitButton = document.getElementById("submit");
+            const rozInput = document.getElementById("roz");
+            const messageOverlay = document.getElementById("messageOverlay");
+            const messageText = document.getElementById("messageText");
+
+            // Limit input to 4 digits
+            rozInput.addEventListener("input", function() {
+                this.value = this.value.replace(/[^0-9]/g, '').slice(0, 4);
+            });
+
+            submitButton.addEventListener("click", handleSubmit);
+
+            function handleSubmit() {
+                const guessedNumber = rozInput.value;
+
+                // Check if the input is exactly 4 digits
+                if (guessedNumber.length !== 4) {
+                    showMessage("Please enter exactly 4 digits.");
+                    return;
+                }
+
+                // Update the corresponding noroz input
+                const norozInput = document.getElementById(`noroz${currentAttempt}`);
+                norozInput.value = guessedNumber;
+
+                // Compare the guess with the number to guess
+                const [correct, misplaced] = compareNumbers(guessedNumber, numberToGuess);
+
+                // Update hint inputs
+                document.getElementById(`hint${currentAttempt}c`).value = correct;
+                document.getElementById(`hint${currentAttempt}p`).value = misplaced;
+
+                // Check if the guess is correct
+                if (correct === 4) {
+                    showMessage("Congratulations! You've guessed the correct number!");
+                    disableInputs();
+                    return;
+                }
+
+                // Move to the next attempt
+                currentAttempt++;
+
+                // Check if all attempts are used
+                if (currentAttempt > 5) {
+                    showMessage(`Game over! The correct number was ${numberToGuess}.`);
+                    disableInputs();
+                    return;
+                }
+
+                // Clear the input for the next guess
+                rozInput.value = "";
+            }
+
+            function compareNumbers(guess, target) {
+                let correct = 0;
+                let misplaced = 0;
+                const usedIndices = new Set();
+
+                // Check for correct digits
+                for (let i = 0; i < 4; i++) {
+                    if (guess[i] === target[i]) {
+                        correct++;
+                        usedIndices.add(i);
+                    }
+                }
+
+                // Check for misplaced digits
+                for (let i = 0; i < 4; i++) {
+                    if (!usedIndices.has(i)) {
+                        const index = target.indexOf(guess[i]);
+                        if (index !== -1 && !usedIndices.has(index)) {
+                            misplaced++;
+                            usedIndices.add(index);
+                        }
+                    }
+                }
+
+                return [correct, misplaced];
+            }
+
+            function disableInputs() {
+                rozInput.disabled = true;
+                submitButton.disabled = true;
+            }
+
+            function showMessage(message) {
+                messageText.textContent = message;
+                messageOverlay.style.display = "flex";
+                setTimeout(() => {
+                    messageOverlay.style.display = "none";
+                }, 3000); // Hide message after 3 seconds
+            }
+
+            // Toggle dark mode
+            const checkbox = document.getElementById('toggle--daynight');
+            checkbox.addEventListener('change', () => {
+                document.body.classList.toggle('dark-mode');
+            });
+        });
+    </script>
+</body>
+</html>
